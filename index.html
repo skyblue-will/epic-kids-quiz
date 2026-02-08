@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Epic Kids Quiz ⭐</title>
+<title>Eric's Epic Quiz ⭐</title>
 <style>
 :root {
   --bg: #0f0f23;
@@ -24,9 +24,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .screen.active{display:flex}
 
 /* Title */
-.title h1{font-size:clamp(2rem,7vw,3.5rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.title h1{font-size:clamp(1.8rem,7vw,3.2rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.25rem}
+.title h1 .name{color:var(--gold)}
 .title .icons{font-size:3rem;margin-bottom:1rem;display:flex;gap:0.5rem;justify-content:center}
-.title p{color:var(--muted);margin-bottom:2rem;font-size:1rem}
+.title .greeting{color:var(--muted);margin-bottom:0.25rem;font-size:1rem}
+.title .subtitle{color:var(--muted);margin-bottom:2rem;font-size:0.9rem}
 
 .btn{border:none;border-radius:12px;padding:0.85rem 2.5rem;font-size:1.1rem;font-weight:700;cursor:pointer;transition:transform 0.1s;color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6)}
 .btn:active{transform:scale(0.95)}
@@ -38,52 +40,70 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .cat-card .icon{font-size:2.5rem;margin-bottom:0.3rem}
 .cat-card .label{font-size:0.85rem;font-weight:700}
 
+/* Difficulty select */
+.diff-row{display:flex;gap:0.75rem;margin-bottom:2rem;flex-wrap:wrap;justify-content:center}
+.diff-pill{padding:0.5rem 1.25rem;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;border:2px solid #333;background:transparent;color:var(--text);transition:all 0.15s}
+.diff-pill.selected{border-color:var(--gold);background:var(--gold);color:#111}
+
 /* Quiz screen */
 .quiz{padding:1rem;justify-content:flex-start;gap:0}
 .progress-bar{width:100%;height:6px;background:#333;border-radius:3px;margin-bottom:0.75rem;overflow:hidden}
 .progress-fill{height:100%;border-radius:3px;transition:width 0.4s ease}
 .quiz-header{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:1rem;padding:0 0.25rem}
 .quiz-header .round-badge{font-size:0.75rem;padding:0.3rem 0.75rem;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+.quiz-header .q-counter{font-size:0.8rem;color:var(--muted)}
 .quiz-header .score-display{font-size:0.9rem;font-weight:700}
 .quiz-header .score-display span{color:var(--gold)}
+.streak-display{font-size:0.8rem;color:var(--gold);min-height:1.2em;margin-bottom:0.25rem}
 
 .question-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:500px;margin:0 auto}
 .q-category{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.25rem}
-.q-emoji{font-size:3.5rem;margin-bottom:0.75rem}
-.q-text{font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700;line-height:1.3;margin-bottom:1.5rem;min-height:3em}
+.q-emoji{font-size:3.5rem;margin-bottom:0.75rem;transition:transform 0.3s}
+.q-text{font-size:clamp(1.1rem,4vw,1.4rem);font-weight:700;line-height:1.3;margin-bottom:1.5rem;min-height:3em}
 
 .answers{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;width:100%;max-width:500px}
 .answer-btn{background:var(--card);border:2px solid #333;border-radius:12px;padding:1rem 0.75rem;font-size:clamp(0.9rem,3vw,1.05rem);font-weight:600;color:var(--text);cursor:pointer;transition:all 0.15s;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center}
-.answer-btn:active{transform:scale(0.97)}
+.answer-btn:active:not(.disabled){transform:scale(0.97)}
 .answer-btn.correct{border-color:var(--correct);background:#22c55e22;color:var(--correct)}
 .answer-btn.wrong{border-color:var(--wrong);background:#ef444422;color:var(--wrong)}
-.answer-btn.reveal{border-color:var(--correct);opacity:0.6}
 .answer-btn.disabled{pointer-events:none}
 
 .feedback{margin-top:1rem;min-height:3rem;display:flex;flex-direction:column;align-items:center;gap:0.5rem}
 .feedback .msg{font-size:1.5rem;font-weight:800}
-.feedback .detail{font-size:0.85rem;color:var(--muted)}
-.next-btn{background:none;border:2px solid #555;border-radius:10px;padding:0.6rem 2rem;color:var(--text);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.15s}
-.next-btn:hover{border-color:var(--gold);color:var(--gold)}
+.feedback .detail{font-size:0.85rem;color:var(--muted);max-width:350px}
+.next-btn{background:none;border:2px solid #555;border-radius:10px;padding:0.6rem 2rem;color:var(--text);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.15s;margin-top:0.25rem}
+.next-btn:active{border-color:var(--gold);color:var(--gold)}
 
 /* Results */
 .results .big-score{font-size:clamp(4rem,12vw,7rem);font-weight:800;color:var(--gold);line-height:1}
-.results .trophy{font-size:4rem;margin-bottom:0.5rem}
-.results .subtitle{color:var(--muted);margin-bottom:0.5rem}
+.results .trophy{font-size:5rem;margin-bottom:0.5rem}
+.results .result-title{font-size:1.6rem;font-weight:800;margin-bottom:0.25rem}
+.results .subtitle{color:var(--muted);margin-bottom:0.5rem;font-size:0.95rem}
 .results .breakdown{display:flex;gap:1.5rem;margin:1.5rem 0;flex-wrap:wrap;justify-content:center}
 .results .bd-item{text-align:center}
 .results .bd-item .num{font-size:1.8rem;font-weight:800}
 .results .bd-item .lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase}
-.results .stars{font-size:2rem;margin-bottom:1.5rem}
+.results .stars{font-size:2rem;margin-bottom:0.5rem}
+.results .challenge{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;max-width:300px}
+.results .btn-row{display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center}
+.btn-outline{background:transparent;border:2px solid #555;border-radius:12px;padding:0.7rem 1.5rem;font-size:0.95rem;font-weight:600;cursor:pointer;color:var(--text);transition:all 0.15s}
+.btn-outline:active{border-color:var(--gold);color:var(--gold)}
 
 /* Animations */
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.shake{animation:shake 0.3s ease}
-.bounce{animation:bounce 0.3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes wobble{0%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+@keyframes slideUp{0%{transform:translateY(20px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.shake{animation:shake 0.35s ease}
+.bounce{animation:bounce 0.35s ease}
+.wobble{animation:wobble 0.4s ease}
+.slide-up{animation:slideUp 0.3s ease-out}
 
 @keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .confetti{position:fixed;top:-10px;width:10px;height:10px;border-radius:2px;animation:confetti-fall 2.5s ease-in forwards;pointer-events:none;z-index:100}
+
+@keyframes firework{0%{transform:scale(0);opacity:1}50%{opacity:1}100%{transform:scale(1.5);opacity:0}}
+.firework{position:fixed;width:80px;height:80px;border-radius:50%;pointer-events:none;z-index:100;animation:firework 0.8s ease-out forwards}
 </style>
 </head>
 <body>
@@ -91,8 +111,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- TITLE -->
 <div id="titleScreen" class="screen title active">
   <div class="icons">⚔️ ⚡ ⛏️</div>
-  <h1>Epic Quiz!</h1>
-  <p>Star Wars · Pokémon · Minecraft</p>
+  <h1>Hey <span class="name">Eric</span>!</h1>
+  <p class="greeting">Ready for a quiz? Pick your challenge 👇</p>
+  <p class="subtitle">Star Wars · Pokémon · Minecraft</p>
   <div class="categories">
     <div class="cat-card selected" data-cat="all" onclick="pickCat(this)">
       <div class="icon">🌟</div>
@@ -111,7 +132,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
       <div class="label">Minecraft</div>
     </div>
   </div>
-  <button class="btn" onclick="startQuiz()">Let's Go! 🚀</button>
+  <div class="diff-row">
+    <div class="diff-pill" data-diff="easy" onclick="pickDiff(this)">🟢 Easy</div>
+    <div class="diff-pill selected" data-diff="mixed" onclick="pickDiff(this)">🌈 Mixed</div>
+    <div class="diff-pill" data-diff="hard" onclick="pickDiff(this)">🔴 Hard</div>
+  </div>
+  <button class="btn" onclick="startQuiz()">Let's Go Eric! 🚀</button>
 </div>
 
 <!-- QUIZ -->
@@ -119,8 +145,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="quiz-header">
     <div class="round-badge" id="roundBadge">Easy</div>
+    <div class="q-counter" id="qCounter">1/15</div>
     <div class="score-display">⭐ <span id="scoreNum">0</span></div>
   </div>
+  <div class="streak-display" id="streakDisplay"></div>
   <div class="question-area">
     <div class="q-category" id="qCat"></div>
     <div class="q-emoji" id="qEmoji"></div>
@@ -134,96 +162,122 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div id="resultScreen" class="screen results">
   <div class="trophy" id="trophyEmoji">🏆</div>
   <div class="big-score" id="finalScore">0</div>
-  <div class="subtitle" id="finalLabel">out of 15</div>
+  <div class="result-title" id="resultTitle"></div>
   <div class="stars" id="finalStars"></div>
+  <div class="subtitle" id="finalLabel"></div>
   <div class="breakdown" id="breakdown"></div>
-  <button class="btn" onclick="resetQuiz()">Play Again! 🔄</button>
+  <div class="challenge" id="challenge"></div>
+  <div class="btn-row">
+    <button class="btn" onclick="startQuiz()">Play Again! 🔄</button>
+    <button class="btn-outline" onclick="resetQuiz()">Change Topic</button>
+  </div>
 </div>
 
 <script>
-// ============ QUESTIONS DATABASE ============
-// 3 difficulty tiers: easy (ages 5-6), medium (6-7), hard (7-8)
-
+// ============ QUESTIONS ============
 const QUESTIONS = {
   starwars: {
     easy: [
-      { q: "What colour is a Jedi's lightsaber usually?", a: ["Blue or green", "Pink", "Orange", "Grey"], c: 0, emoji: "🔵", detail: "Jedi usually have blue or green lightsabers!" },
-      { q: "What is the name of the big hairy Wookiee?", a: ["Chewbacca", "Yoda", "R2-D2", "Jabba"], c: 0, emoji: "🐻", detail: "Chewbacca is Han Solo's best friend!" },
-      { q: "What colour is Darth Vader's lightsaber?", a: ["Green", "Blue", "Red", "Yellow"], c: 2, emoji: "🔴", detail: "Bad guys always have red lightsabers!" },
-      { q: "What is Baby Yoda's favourite food?", a: ["Pizza", "Frogs", "Chips", "Ice cream"], c: 1, emoji: "🐸", detail: "Grogu loves eating frogs!" },
-      { q: "What shape is the Death Star?", a: ["A cube", "A ball", "A triangle", "A star"], c: 1, emoji: "🌑", detail: "The Death Star is shaped like a big round ball!" },
-      { q: "Who says 'I am your father'?", a: ["Yoda", "Darth Vader", "Luke", "Han Solo"], c: 1, emoji: "😱", detail: "Darth Vader says it to Luke!" },
+      { q: "Eric, what colour is a Jedi's lightsaber usually?", a: ["Blue or green", "Pink", "Orange", "Grey"], c: 0, emoji: "🔵", detail: "Blue or green! Maybe one day you'll build your own lightsaber, Eric!" },
+      { q: "What's the name of the big hairy Wookiee?", a: ["Chewbacca", "Yoda", "R2-D2", "Jabba"], c: 0, emoji: "🐻", detail: "Chewbacca! He's Han Solo's best mate — like you and your best friend!" },
+      { q: "What colour is Darth Vader's lightsaber?", a: ["Green", "Blue", "Red", "Yellow"], c: 2, emoji: "🔴", detail: "Red! The baddies always have red ones. Remember that, Eric!" },
+      { q: "What is Baby Yoda's favourite snack?", a: ["Pizza", "Frogs", "Chips", "Ice cream"], c: 1, emoji: "🐸", detail: "Frogs! Grogu loves munching on frogs. Bit gross, right Eric? 🤢" },
+      { q: "What shape is the Death Star?", a: ["A cube", "A ball", "A triangle", "A star"], c: 1, emoji: "🌑", detail: "A massive ball floating in space! Bigger than anything you've ever seen!" },
+      { q: "Who says 'I am your father'?", a: ["Yoda", "Darth Vader", "Luke", "Han Solo"], c: 1, emoji: "😱", detail: "Darth Vader! The biggest plot twist ever, Eric!" },
     ],
     medium: [
-      { q: "What planet does Luke Skywalker grow up on?", a: ["Endor", "Hoth", "Tatooine", "Naboo"], c: 2, emoji: "🏜️", detail: "Tatooine is a desert planet with two suns!" },
-      { q: "What are the little teddy bear creatures called?", a: ["Jawas", "Ewoks", "Porgs", "Wookiees"], c: 1, emoji: "🧸", detail: "Ewoks live on the forest moon of Endor!" },
-      { q: "Who is Luke Skywalker's twin sister?", a: ["Padmé", "Rey", "Leia", "Ahsoka"], c: 2, emoji: "👸", detail: "Princess Leia is Luke's twin!" },
-      { q: "What does Yoda teach Luke to use?", a: ["A blaster", "The Force", "A spaceship", "A shield"], c: 1, emoji: "✨", detail: "Yoda is a Jedi Master who teaches the Force!" },
-      { q: "What is Han Solo's spaceship called?", a: ["X-Wing", "Star Destroyer", "Millennium Falcon", "TIE Fighter"], c: 2, emoji: "🚀", detail: "The Millennium Falcon is the fastest ship in the galaxy!" },
+      { q: "What planet does Luke Skywalker grow up on?", a: ["Endor", "Hoth", "Tatooine", "Naboo"], c: 2, emoji: "🏜️", detail: "Tatooine — a desert planet with TWO suns! Imagine that, Eric!" },
+      { q: "What are the little teddy bear creatures called?", a: ["Jawas", "Ewoks", "Porgs", "Wookiees"], c: 1, emoji: "🧸", detail: "Ewoks! They're tiny but they beat the Empire. Small but mighty — like you, Eric!" },
+      { q: "Who is Luke Skywalker's twin sister?", a: ["Padmé", "Rey", "Leia", "Ahsoka"], c: 2, emoji: "👸", detail: "Princess Leia! Imagine finding out you had a secret twin — like if Vera had a surprise twin!" },
+      { q: "What does Yoda teach Luke to use?", a: ["A blaster", "The Force", "A spaceship", "A shield"], c: 1, emoji: "✨", detail: "The Force! 'Do or do not, there is no try.' Words to live by, Eric!" },
+      { q: "What is Han Solo's spaceship called?", a: ["X-Wing", "Star Destroyer", "Millennium Falcon", "TIE Fighter"], c: 2, emoji: "🚀", detail: "The Millennium Falcon — the fastest hunk of junk in the galaxy!" },
+      { q: "What sound does a lightsaber make?", a: ["Bang bang!", "Vwoom vwoom!", "Beep boop!", "Whoosh!"], c: 1, emoji: "⚔️", detail: "Vwoom vwoom! Bet you've made that noise before, Eric! 😄" },
     ],
     hard: [
-      { q: "What type of creature is Jabba?", a: ["A Wookiee", "A Hutt", "A Jedi", "An Ewok"], c: 1, emoji: "🐛", detail: "Jabba the Hutt is a big slimy slug-like alien!" },
-      { q: "What is the Mandalorian's real name?", a: ["Boba Fett", "Din Djarin", "Jango Fett", "Cad Bane"], c: 1, emoji: "🪖", detail: "Din Djarin is the Mandalorian's real name!" },
-      { q: "Which planet is covered in ice and snow?", a: ["Mustafar", "Hoth", "Tatooine", "Bespin"], c: 1, emoji: "❄️", detail: "Hoth is freezing cold — the rebels hid there!" },
-      { q: "Who built C-3PO?", a: ["Obi-Wan", "Han Solo", "Anakin Skywalker", "Padmé"], c: 2, emoji: "🤖", detail: "Young Anakin built C-3PO as a boy!" },
-      { q: "What colour is Mace Windu's lightsaber?", a: ["Blue", "Green", "Purple", "Red"], c: 2, emoji: "🟣", detail: "Mace Windu is the only Jedi with a purple lightsaber!" },
+      { q: "What type of creature is Jabba?", a: ["A Wookiee", "A Hutt", "A Jedi", "An Ewok"], c: 1, emoji: "🐛", detail: "A Hutt! Jabba is a massive slimy slug. You wouldn't want him round for tea!" },
+      { q: "What is the Mandalorian's real name?", a: ["Boba Fett", "Din Djarin", "Jango Fett", "Cad Bane"], c: 1, emoji: "🪖", detail: "Din Djarin! This is the way, Eric!" },
+      { q: "Which planet is covered in ice and snow?", a: ["Mustafar", "Hoth", "Tatooine", "Bespin"], c: 1, emoji: "❄️", detail: "Hoth! Even colder than Yorkshire in winter, Eric!" },
+      { q: "Who built C-3PO?", a: ["Obi-Wan", "Han Solo", "Anakin Skywalker", "Padmé"], c: 2, emoji: "🤖", detail: "Young Anakin! He was about your age when he started building him. Could you build a robot, Eric?" },
+      { q: "What colour is Mace Windu's lightsaber?", a: ["Blue", "Green", "Purple", "Red"], c: 2, emoji: "🟣", detail: "Purple! The only Jedi with a purple one — proper special!" },
     ]
   },
   pokemon: {
     easy: [
-      { q: "What colour is Pikachu?", a: ["Red", "Blue", "Yellow", "Green"], c: 2, emoji: "⚡", detail: "Pikachu is a yellow Electric-type Pokémon!" },
-      { q: "What does Pikachu say?", a: ["Char char!", "Pika pika!", "Bulba!", "Squirtle!"], c: 1, emoji: "💬", detail: "Pika pika! Pikachu!" },
-      { q: "What type of Pokémon is Charmander?", a: ["Water", "Grass", "Fire", "Electric"], c: 2, emoji: "🔥", detail: "Charmander is a Fire-type with a flame on its tail!" },
-      { q: "What do you catch Pokémon with?", a: ["A net", "A Poké Ball", "A bag", "Your hands"], c: 1, emoji: "🔴", detail: "Poké Balls are red and white!" },
-      { q: "Who is Ash's best Pokémon friend?", a: ["Charizard", "Mewtwo", "Pikachu", "Eevee"], c: 2, emoji: "🧢", detail: "Pikachu has been with Ash from the very start!" },
-      { q: "Is Squirtle a water or fire Pokémon?", a: ["Fire", "Water", "Grass", "Rock"], c: 1, emoji: "💧", detail: "Squirtle is a Water-type — it's a little turtle!" },
+      { q: "Eric! What colour is Pikachu?", a: ["Red", "Blue", "Yellow", "Green"], c: 2, emoji: "⚡", detail: "Yellow! Pikachu is the most famous Pokémon ever!" },
+      { q: "What does Pikachu always say?", a: ["Char char!", "Pika pika!", "Bulba!", "Squirtle!"], c: 1, emoji: "💬", detail: "Pika pika! Can you do the voice, Eric?" },
+      { q: "What type of Pokémon is Charmander?", a: ["Water", "Grass", "Fire", "Electric"], c: 2, emoji: "🔥", detail: "Fire type! He's got a flame on his tail that must NEVER go out!" },
+      { q: "What do you catch Pokémon with?", a: ["A net", "A Poké Ball", "A bag", "Your hands"], c: 1, emoji: "🔴", detail: "A Poké Ball! Red and white. You tap the button and throw — you know the drill, Eric!" },
+      { q: "Who is Ash's best Pokémon friend?", a: ["Charizard", "Mewtwo", "Pikachu", "Eevee"], c: 2, emoji: "🧢", detail: "Pikachu! They've been best mates from day one — like you and Holly at family dos!" },
+      { q: "Is Squirtle a water or fire Pokémon?", a: ["Fire", "Water", "Grass", "Rock"], c: 1, emoji: "💧", detail: "Water! He's a little turtle who squirts water. Cool, right Eric?" },
     ],
     medium: [
-      { q: "What does Charmander evolve into first?", a: ["Charizard", "Charmeleon", "Squirtle", "Bulbasaur"], c: 1, emoji: "🦎", detail: "Charmander evolves into Charmeleon, then Charizard!" },
-      { q: "What type is super effective against Water?", a: ["Fire", "Ice", "Grass", "Rock"], c: 2, emoji: "🌿", detail: "Grass beats Water, Water beats Fire, Fire beats Grass!" },
-      { q: "What is the name of the Pokémon professor?", a: ["Professor Pine", "Professor Oak", "Professor Elm", "Professor Birch"], c: 1, emoji: "🧑‍🔬", detail: "Professor Oak gives you your first Pokémon!" },
-      { q: "How many Pokémon did the first games have?", a: ["50", "100", "151", "200"], c: 2, emoji: "📋", detail: "The original 151 Pokémon — gotta catch 'em all!" },
-      { q: "What does Eevee evolve into with a Water Stone?", a: ["Flareon", "Jolteon", "Vaporeon", "Umbreon"], c: 2, emoji: "💎", detail: "Vaporeon is Eevee's Water evolution!" },
+      { q: "What does Charmander evolve into first?", a: ["Charizard", "Charmeleon", "Squirtle", "Bulbasaur"], c: 1, emoji: "🦎", detail: "Charmeleon! Then Charmeleon becomes Charizard — the big fire dragon!" },
+      { q: "What type beats Water, Eric?", a: ["Fire", "Ice", "Grass", "Rock"], c: 2, emoji: "🌿", detail: "Grass! Grass beats Water, Water beats Fire, Fire beats Grass. Can you remember that?" },
+      { q: "What is the Pokémon professor called?", a: ["Professor Pine", "Professor Oak", "Professor Elm", "Professor Birch"], c: 1, emoji: "🧑‍🔬", detail: "Professor Oak! He gives you your first ever Pokémon. Who would you pick, Eric?" },
+      { q: "How many Pokémon were in the very first games?", a: ["50", "100", "151", "200"], c: 2, emoji: "📋", detail: "151! And now there are over 1,000. That's a LOT of catching!" },
+      { q: "What does Eevee evolve into with a Water Stone?", a: ["Flareon", "Jolteon", "Vaporeon", "Umbreon"], c: 2, emoji: "💎", detail: "Vaporeon! Eevee has loads of evolutions — it's the coolest Pokémon for that!" },
+      { q: "Which Pokémon is a sleeping giant that blocks the road?", a: ["Jigglypuff", "Snorlax", "Slowpoke", "Munchlax"], c: 1, emoji: "😴", detail: "Snorlax! He just sleeps and eats. Sounds like a good life, Eric!" },
     ],
     hard: [
-      { q: "What is the strongest Pokémon in the first games?", a: ["Pikachu", "Charizard", "Mewtwo", "Mew"], c: 2, emoji: "🧬", detail: "Mewtwo was created in a lab and is super powerful!" },
-      { q: "What type is Gengar?", a: ["Dark", "Ghost and Poison", "Psychic", "Normal"], c: 1, emoji: "👻", detail: "Gengar is Ghost and Poison type — spooky!" },
-      { q: "Which Pokémon is number 1 in the Pokédex?", a: ["Pikachu", "Charmander", "Bulbasaur", "Mew"], c: 2, emoji: "📖", detail: "Bulbasaur is #001 in the Pokédex!" },
-      { q: "What Pokémon can Ditto transform into?", a: ["Only Pikachu", "Only legendaries", "Any Pokémon", "Only small ones"], c: 2, emoji: "🪞", detail: "Ditto can copy any Pokémon it sees!" },
-      { q: "What legendary bird is an Ice type?", a: ["Moltres", "Zapdos", "Articuno", "Ho-Oh"], c: 2, emoji: "🧊", detail: "Articuno is the legendary Ice bird!" },
+      { q: "What legendary Pokémon was created in a lab?", a: ["Pikachu", "Charizard", "Mewtwo", "Mew"], c: 2, emoji: "🧬", detail: "Mewtwo! Scientists made him and he's mega powerful. Scary stuff!" },
+      { q: "What type is Gengar?", a: ["Dark", "Ghost and Poison", "Psychic", "Normal"], c: 1, emoji: "👻", detail: "Ghost and Poison! Gengar hides in shadows. Spooky, Eric! 👻" },
+      { q: "Which Pokémon is number 1 in the Pokédex?", a: ["Pikachu", "Charmander", "Bulbasaur", "Mew"], c: 2, emoji: "📖", detail: "Bulbasaur! Not Pikachu — bet that surprised you, Eric!" },
+      { q: "What can Ditto transform into?", a: ["Only Pikachu", "Only legendaries", "Any Pokémon", "Only small ones"], c: 2, emoji: "🪞", detail: "Any Pokémon! Ditto copies whatever it sees. Imagine if you could do that!" },
+      { q: "What legendary bird is an Ice type?", a: ["Moltres", "Zapdos", "Articuno", "Ho-Oh"], c: 2, emoji: "🧊", detail: "Articuno! Artic-uno — the clue's in the name! Artic = cold!" },
     ]
   },
   minecraft: {
     easy: [
-      { q: "What do you use to mine stone in Minecraft?", a: ["A sword", "A pickaxe", "A shovel", "An axe"], c: 1, emoji: "⛏️", detail: "Pickaxes are for mining stone and ores!" },
-      { q: "What colour are Creepers?", a: ["Red", "Blue", "Green", "Purple"], c: 2, emoji: "💚", detail: "Creepers are green and go BOOM!" },
-      { q: "What do Creepers do when they get close?", a: ["Run away", "Dance", "Explode", "Fly"], c: 2, emoji: "💥", detail: "SSSSsss... BOOM! Watch out for Creepers!" },
-      { q: "What do you sleep in at night?", a: ["A chair", "A bed", "A boat", "A chest"], c: 1, emoji: "🛏️", detail: "Beds skip the scary night time!" },
-      { q: "What animal gives you wool?", a: ["Pig", "Cow", "Chicken", "Sheep"], c: 3, emoji: "🐑", detail: "Sheep drop wool when you shear them!" },
-      { q: "What shape are ALL blocks in Minecraft?", a: ["Round", "Triangle", "Square/cube", "Star"], c: 2, emoji: "🟫", detail: "Everything in Minecraft is made of cubes!" },
+      { q: "Eric, what do you mine stone with in Minecraft?", a: ["A sword", "A pickaxe", "A shovel", "An axe"], c: 1, emoji: "⛏️", detail: "A pickaxe! You probably knew that one, Eric! ⛏️" },
+      { q: "What colour are Creepers?", a: ["Red", "Blue", "Green", "Purple"], c: 2, emoji: "💚", detail: "Green! And they sneak up on you... ssssSSS... BOOM! 💥" },
+      { q: "What do Creepers do when they get close to you?", a: ["Run away", "Dance", "Explode", "Fly"], c: 2, emoji: "💥", detail: "They EXPLODE! The worst surprise ever. Has one blown up your house, Eric?" },
+      { q: "What do you sleep in to skip night time?", a: ["A chair", "A bed", "A boat", "A chest"], c: 1, emoji: "🛏️", detail: "A bed! Made from wool and wood. Skips all the scary mobs!" },
+      { q: "Which animal gives you wool?", a: ["Pig", "Cow", "Chicken", "Sheep"], c: 3, emoji: "🐑", detail: "Sheep! Shear them or... well, the other way is a bit mean!" },
+      { q: "What shape is EVERYTHING in Minecraft?", a: ["Round", "Triangle", "Cubes!", "Star"], c: 2, emoji: "🟫", detail: "Cubes! Even the sun is square in Minecraft. How mad is that, Eric?" },
     ],
     medium: [
-      { q: "What do you need to make a torch?", a: ["Wood and coal", "Stone and iron", "Sand and water", "Wool and string"], c: 0, emoji: "🔦", detail: "A stick and coal makes a torch to light up caves!" },
-      { q: "What happens if you dig straight down?", a: ["You find diamonds", "You might fall in lava!", "Nothing bad", "You win the game"], c: 1, emoji: "🕳️", detail: "Never dig straight down — you might fall into lava!" },
-      { q: "What do you need to go to the Nether?", a: ["A boat", "A portal made of obsidian", "A ladder", "A diamond sword"], c: 1, emoji: "🟪", detail: "You build a Nether portal with obsidian and light it with flint and steel!" },
-      { q: "What ore is the rarest to find?", a: ["Iron", "Gold", "Diamond", "Emerald"], c: 3, emoji: "💎", detail: "Emeralds are actually rarer than diamonds!" },
-      { q: "What mob drops gunpowder?", a: ["Zombie", "Skeleton", "Creeper", "Spider"], c: 2, emoji: "💣", detail: "Creepers drop gunpowder when defeated!" },
+      { q: "What do you need to make a torch?", a: ["Stick and coal", "Stone and iron", "Sand and water", "Wool and string"], c: 0, emoji: "🔦", detail: "Stick and coal! Dead easy to make and lights up those scary caves!" },
+      { q: "Eric, what happens if you dig straight down?", a: ["You find diamonds", "You might fall in lava!", "Nothing bad", "You win the game"], c: 1, emoji: "🕳️", detail: "NEVER dig straight down! Oldest rule in Minecraft, Eric. Lava = game over!" },
+      { q: "What do you need to get to the Nether?", a: ["A boat", "An obsidian portal", "A ladder", "A diamond sword"], c: 1, emoji: "🟪", detail: "An obsidian portal! Light it with flint and steel and off you go to the scary Nether!" },
+      { q: "What ore is even rarer than diamond?", a: ["Iron", "Gold", "Redstone", "Emerald"], c: 3, emoji: "💎", detail: "Emeralds! They're proper rare. Did you know that, Eric? Most people think it's diamonds!" },
+      { q: "Which mob drops gunpowder?", a: ["Zombie", "Skeleton", "Creeper", "Spider"], c: 2, emoji: "💣", detail: "Creepers! At least they're useful for something other than blowing up your builds!" },
+      { q: "What do you feed wolves to tame them?", a: ["Steak", "Bones", "Fish", "Apples"], c: 1, emoji: "🐺", detail: "Bones! Give a wolf enough bones and it becomes your loyal dog. Get one, Eric!" },
     ],
     hard: [
-      { q: "What do you throw to find a stronghold?", a: ["Snowball", "Eye of Ender", "Ender Pearl", "Fire Charge"], c: 1, emoji: "👁️", detail: "Eyes of Ender float towards the stronghold!" },
-      { q: "What is the final boss in Minecraft called?", a: ["The Wither", "The Ender Dragon", "Herobrine", "The Warden"], c: 1, emoji: "🐉", detail: "The Ender Dragon lives in The End dimension!" },
-      { q: "How many obsidian blocks do you need for a Nether portal?", a: ["8", "10", "12", "14"], c: 1, emoji: "🟪", detail: "You need 10 obsidian blocks for the portal frame!" },
-      { q: "What do villagers trade with?", a: ["Gold", "Diamonds", "Emeralds", "Iron"], c: 2, emoji: "🧑‍🌾", detail: "Villagers love emeralds — that's their money!" },
-      { q: "What potion makes you invisible?", a: ["Potion of Speed", "Potion of Invisibility", "Potion of Strength", "Potion of Healing"], c: 1, emoji: "🧪", detail: "Potion of Invisibility — mobs can't see you!" },
+      { q: "What do you throw to find a stronghold?", a: ["Snowball", "Eye of Ender", "Ender Pearl", "Fire Charge"], c: 1, emoji: "👁️", detail: "Eye of Ender! It floats through the sky towards the stronghold. So cool!" },
+      { q: "What's the final boss in Minecraft called?", a: ["The Wither", "The Ender Dragon", "Herobrine", "The Warden"], c: 1, emoji: "🐉", detail: "The Ender Dragon! Have you beaten it yet, Eric? It's proper hard!" },
+      { q: "How many obsidian blocks for a Nether portal?", a: ["8", "10", "12", "14"], c: 1, emoji: "🟪", detail: "10! Four along the bottom, four along the top, and one on each side!" },
+      { q: "What do villagers use as money?", a: ["Gold", "Diamonds", "Emeralds", "Iron"], c: 2, emoji: "🧑‍🌾", detail: "Emeralds! That's why they're so valuable. Villagers are mad for them!" },
+      { q: "What new scary mob lives deep underground and is blind?", a: ["The Wither", "The Warden", "Enderman", "Elder Guardian"], c: 1, emoji: "🦇", detail: "The Warden! It can't see but it can HEAR you. Don't even sneak near it, Eric!" },
     ]
   }
 };
 
+// ============ ENCOURAGEMENT & PERSONALITY ============
+const CORRECT_MSGS = [
+  "Yes Eric! 🎉", "You smashed it! ⭐", "Brilliant! 🌟", "Get in! 💪",
+  "Awesome, Eric! 🔥", "Nailed it! 🎯", "Super smart! ✨", "Legend! 🤩",
+  "Too easy for you! 😎", "Eric knows his stuff! 🧠"
+];
+const WRONG_MSGS = [
+  "Not quite, Eric! 😅", "Oops! 🙈", "Good guess! 💪",
+  "Nearly had it! 🤏", "Tricky one! 😊", "Don't worry, next one! 👊"
+];
+const STREAK_MSGS = {
+  3: "🔥 3 in a row! Eric's on fire!",
+  5: "⚡ 5 streak! Unstoppable!",
+  7: "🌟 7 in a row! Tell Vera and Holly about THIS!",
+  10: "🏆 TEN in a row?! Eric you're a genius!"
+};
+
 // ============ GAME STATE ============
 let selectedCat = 'all';
+let selectedDiff = 'mixed';
 let questions = [];
 let currentQ = 0;
 let score = 0;
+let streak = 0;
+let bestStreak = 0;
 let answered = false;
 let catScores = { starwars: {right:0,total:0}, pokemon: {right:0,total:0}, minecraft: {right:0,total:0} };
 
@@ -231,15 +285,16 @@ const DIFFICULTY_COLORS = { easy: '#22c55e', medium: '#f59e0b', hard: '#ef4444' 
 const DIFFICULTY_LABELS = { easy: '🟢 Easy', medium: '🟡 Medium', hard: '🔴 Hard' };
 const CAT_COLORS = { starwars: 'var(--star-wars)', pokemon: 'var(--pokemon)', minecraft: 'var(--minecraft)' };
 const CAT_LABELS = { starwars: '⚔️ Star Wars', pokemon: '⚡ Pokémon', minecraft: '⛏️ Minecraft' };
-const TOTAL_QUESTIONS = 15; // 5 easy, 5 medium, 5 hard
-
-const CORRECT_MSGS = ["Amazing! 🎉", "You got it! ⭐", "Brilliant! 🌟", "Yes! 💪", "Awesome! 🔥", "Nailed it! 🎯", "Super! ✨", "Wow! 🤩"];
-const WRONG_MSGS = ["Not quite! 😅", "Oops! 🙈", "Good try! 💪", "Nearly! 🤏", "So close! 😊"];
 
 function pickCat(el) {
   document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedCat = el.dataset.cat;
+}
+function pickDiff(el) {
+  document.querySelectorAll('.diff-pill').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDiff = el.dataset.diff;
 }
 
 function shuffle(arr) {
@@ -257,19 +312,18 @@ function buildQuestions() {
 
   cats.forEach(cat => {
     ['easy', 'medium', 'hard'].forEach(diff => {
-      QUESTIONS[cat][diff].forEach(q => {
-        pool[diff].push({ ...q, cat, diff });
-      });
+      QUESTIONS[cat][diff].forEach(q => pool[diff].push({ ...q, cat, diff }));
     });
   });
 
-  // Pick 5 easy, 5 medium, 5 hard
-  const picked = [
-    ...shuffle(pool.easy).slice(0, 5),
-    ...shuffle(pool.medium).slice(0, 5),
-    ...shuffle(pool.hard).slice(0, 5),
-  ];
-
+  let picked;
+  if (selectedDiff === 'easy') {
+    picked = [...shuffle(pool.easy).slice(0, 10), ...shuffle(pool.medium).slice(0, 5)];
+  } else if (selectedDiff === 'hard') {
+    picked = [...shuffle(pool.medium).slice(0, 5), ...shuffle(pool.hard).slice(0, 10)];
+  } else {
+    picked = [...shuffle(pool.easy).slice(0, 5), ...shuffle(pool.medium).slice(0, 5), ...shuffle(pool.hard).slice(0, 5)];
+  }
   return picked;
 }
 
@@ -277,6 +331,8 @@ function startQuiz() {
   questions = buildQuestions();
   currentQ = 0;
   score = 0;
+  streak = 0;
+  bestStreak = 0;
   answered = false;
   catScores = { starwars: {right:0,total:0}, pokemon: {right:0,total:0}, minecraft: {right:0,total:0} };
   showScreen('quizScreen');
@@ -289,52 +345,65 @@ function showScreen(id) {
 }
 
 function showQuestion() {
-  if (currentQ >= questions.length) {
-    showResults();
-    return;
-  }
+  if (currentQ >= questions.length) { showResults(); return; }
 
   answered = false;
   const q = questions[currentQ];
-  const diff = q.diff;
 
   // Progress
-  const pct = (currentQ / questions.length) * 100;
   const fill = document.getElementById('progressFill');
-  fill.style.width = pct + '%';
-  fill.style.background = DIFFICULTY_COLORS[diff];
+  fill.style.width = ((currentQ / questions.length) * 100) + '%';
+  fill.style.background = DIFFICULTY_COLORS[q.diff];
 
-  // Round badge
+  // Badge
   const badge = document.getElementById('roundBadge');
-  badge.textContent = DIFFICULTY_LABELS[diff];
-  badge.style.background = DIFFICULTY_COLORS[diff] + '22';
-  badge.style.color = DIFFICULTY_COLORS[diff];
+  badge.textContent = DIFFICULTY_LABELS[q.diff];
+  badge.style.background = DIFFICULTY_COLORS[q.diff] + '22';
+  badge.style.color = DIFFICULTY_COLORS[q.diff];
 
-  // Score
+  // Counter & Score
+  document.getElementById('qCounter').textContent = `${currentQ + 1}/${questions.length}`;
   document.getElementById('scoreNum').textContent = score;
+
+  // Streak
+  const sd = document.getElementById('streakDisplay');
+  if (STREAK_MSGS[streak]) {
+    sd.textContent = STREAK_MSGS[streak];
+  } else if (streak >= 3) {
+    sd.textContent = `🔥 ${streak} in a row!`;
+  } else {
+    sd.textContent = '';
+  }
 
   // Question
   document.getElementById('qCat').textContent = CAT_LABELS[q.cat];
   document.getElementById('qCat').style.color = CAT_COLORS[q.cat];
-  document.getElementById('qEmoji').textContent = q.emoji;
+  const emojiEl = document.getElementById('qEmoji');
+  emojiEl.textContent = q.emoji;
+  emojiEl.className = 'q-emoji slide-up';
   document.getElementById('qText').textContent = q.q;
 
-  // Answers
+  // Answers (shuffled positions but track correct)
   const answersEl = document.getElementById('answers');
   answersEl.innerHTML = '';
-  q.a.forEach((ans, i) => {
+  
+  // Shuffle answer order
+  const indices = [0, 1, 2, 3];
+  const shuffled = shuffle(indices);
+  
+  shuffled.forEach(origIdx => {
     const btn = document.createElement('button');
     btn.className = 'answer-btn';
-    btn.textContent = ans;
-    btn.onclick = () => pickAnswer(i);
+    btn.textContent = q.a[origIdx];
+    btn.dataset.idx = origIdx;
+    btn.onclick = () => pickAnswer(origIdx, btn);
     answersEl.appendChild(btn);
   });
 
-  // Clear feedback
   document.getElementById('feedback').innerHTML = '';
 }
 
-function pickAnswer(idx) {
+function pickAnswer(idx, clickedBtn) {
   if (answered) return;
   answered = true;
 
@@ -342,18 +411,31 @@ function pickAnswer(idx) {
   const isCorrect = idx === q.c;
   const btns = document.querySelectorAll('.answer-btn');
 
-  btns.forEach((btn, i) => {
+  btns.forEach(btn => {
     btn.classList.add('disabled');
-    if (i === q.c) btn.classList.add('correct');
-    if (i === idx && !isCorrect) btn.classList.add('wrong');
+    const bIdx = parseInt(btn.dataset.idx);
+    if (bIdx === q.c) btn.classList.add('correct');
+    if (bIdx === idx && !isCorrect) btn.classList.add('wrong');
   });
 
-  // Track score
   catScores[q.cat].total++;
   if (isCorrect) {
     score++;
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
     catScores[q.cat].right++;
     document.getElementById('scoreNum').textContent = score;
+    
+    // Streak check
+    const sd = document.getElementById('streakDisplay');
+    if (STREAK_MSGS[streak]) {
+      sd.textContent = STREAK_MSGS[streak];
+    } else if (streak >= 3) {
+      sd.textContent = `🔥 ${streak} in a row!`;
+    }
+  } else {
+    streak = 0;
+    document.getElementById('streakDisplay').textContent = '';
   }
 
   // Feedback
@@ -381,26 +463,36 @@ function nextQuestion() {
 }
 
 function showResults() {
-  // Fill progress to 100%
   document.getElementById('progressFill').style.width = '100%';
 
   const pct = Math.round((score / questions.length) * 100);
-  let trophy, label;
-  if (pct >= 90) { trophy = '🏆'; label = 'Quiz Champion!'; }
-  else if (pct >= 70) { trophy = '🥇'; label = 'Superstar!'; }
-  else if (pct >= 50) { trophy = '⭐'; label = 'Great job!'; }
-  else if (pct >= 30) { trophy = '👏'; label = 'Good try!'; }
-  else { trophy = '💪'; label = 'Keep practising!'; }
+  let trophy, title, subtitle;
+  if (pct === 100) { trophy = '👑'; title = "PERFECT SCORE, ERIC!"; subtitle = "You got every single one right! Go tell Vera and Holly!"; }
+  else if (pct >= 90) { trophy = '🏆'; title = "Quiz Champion!"; subtitle = "Eric, that was incredible! Vera and Holly would be well impressed!"; }
+  else if (pct >= 70) { trophy = '🥇'; title = "Superstar Eric!"; subtitle = "Proper brilliant! You really know your stuff!"; }
+  else if (pct >= 50) { trophy = '⭐'; title = "Great job, Eric!"; subtitle = "More than half right! Have another go and beat your score!"; }
+  else if (pct >= 30) { trophy = '👏'; title = "Good effort, Eric!"; subtitle = "You're learning loads! Try again and you'll smash it!"; }
+  else { trophy = '💪'; title = "Keep going, Eric!"; subtitle = "Practice makes perfect! Have another go!"; }
 
   document.getElementById('trophyEmoji').textContent = trophy;
   document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
-  document.getElementById('finalLabel').textContent = label;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('finalLabel').textContent = subtitle;
 
-  // Stars
   const starCount = Math.ceil((score / questions.length) * 5);
   document.getElementById('finalStars').textContent = '⭐'.repeat(starCount) + '☆'.repeat(5 - starCount);
 
-  // Breakdown by category
+  // Challenge text
+  const ch = document.getElementById('challenge');
+  if (bestStreak >= 5) {
+    ch.textContent = `🔥 Best streak: ${bestStreak} in a row! Can you beat that next time?`;
+  } else if (pct < 100) {
+    ch.textContent = `Challenge: Can you get ${score + 3} next time? Go on Eric!`;
+  } else {
+    ch.textContent = `Try Hard mode if you dare! 😈`;
+  }
+
+  // Breakdown
   const bd = document.getElementById('breakdown');
   bd.innerHTML = '';
   Object.keys(catScores).forEach(cat => {
@@ -416,24 +508,38 @@ function showResults() {
   });
 
   showScreen('resultScreen');
-
-  // Confetti!
   if (pct >= 50) spawnConfetti();
+  if (pct === 100) spawnFireworks();
 }
 
 function spawnConfetti() {
   const colors = ['#FFE81F', '#FF6B6B', '#5BBF3E', '#6366f1', '#f5c518', '#22c55e'];
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 50; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
     c.style.left = Math.random() * 100 + 'vw';
     c.style.background = colors[Math.floor(Math.random() * colors.length)];
     c.style.animationDelay = Math.random() * 1.5 + 's';
     c.style.animationDuration = (2 + Math.random() * 2) + 's';
-    c.style.width = (6 + Math.random() * 8) + 'px';
-    c.style.height = (6 + Math.random() * 8) + 'px';
+    c.style.width = (6 + Math.random() * 10) + 'px';
+    c.style.height = (6 + Math.random() * 10) + 'px';
     document.body.appendChild(c);
-    setTimeout(() => c.remove(), 4000);
+    setTimeout(() => c.remove(), 4500);
+  }
+}
+
+function spawnFireworks() {
+  const colors = ['#FFE81F44', '#FF6B6B44', '#5BBF3E44', '#6366f144'];
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const f = document.createElement('div');
+      f.className = 'firework';
+      f.style.left = (10 + Math.random() * 80) + 'vw';
+      f.style.top = (10 + Math.random() * 60) + 'vh';
+      f.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]}, transparent)`;
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 1000);
+    }, i * 400);
   }
 }
 
